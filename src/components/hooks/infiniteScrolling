@@ -1,0 +1,98 @@
+// "use client"
+
+// import { useState, useEffect, useRef, useCallback } from "react"
+
+// interface UseInfiniteScrollOptions {
+//     threshold?: number
+//     initialPage?: number
+//     loadMoreDelay?: number
+// }
+
+// export function useInfiniteScroll<T>({
+//     threshold = 0.8,
+//     initialPage = 1,
+//     loadMoreDelay = 500,
+// }: UseInfiniteScrollOptions = {}) {
+//     const [page, setPage] = useState(initialPage)
+//     const [isLoading, setIsLoading] = useState(false)
+//     const [hasMore, setHasMore] = useState(true)
+//     const [items, setItems] = useState<T[]>([])
+//     const observerRef = useRef<IntersectionObserver | null>(null)
+//     const loadMoreTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+//     const loaderRef = useRef<HTMLDivElement | null>(null)
+
+//     const loadMore = useCallback(() => {
+//         if (isLoading || !hasMore) {
+//             console.log(`Skip loadMore: loading=${loading}, hasMore=${hasMore}`)
+//             return
+//         }
+
+//         // Clear any existing timeout
+//         if (loadMoreTimeoutRef.current) {
+//             clearTimeout(loadMoreTimeoutRef.current)
+//         }
+
+//         console.log("Triggering loadMore")
+
+//         // Set a timeout to prevent too many rapid calls
+//         loadMoreTimeoutRef.current = setTimeout(() => {
+//             setPage((prevPage) => prevPage + 1)
+//         }, loadMoreDelay)
+//     }, [isLoading, hasMore, loadMoreDelay])
+
+//     // Setup intersection observer
+//     useEffect(() => {
+//         const options = {
+//             root: null, // viewport
+//             rootMargin: "300px", // Load earlier, before the element is visible
+//             threshold: 0.1, // Trigger when just 10% of the element is visible
+//         }
+
+//         const observer = new IntersectionObserver((entries) => {
+//             const [entry] = entries
+//             if (entry.isIntersecting && hasMore && !isLoading) {
+//                 console.log("Intersection observed, loading more items")
+//                 loadMore()
+//             }
+//         }, options)
+
+//         observerRef.current = observer
+
+//         return () => {
+//             if (observerRef.current) {
+//                 observerRef.current.disconnect()
+//             }
+//             if (loadMoreTimeoutRef.current) {
+//                 clearTimeout(loadMoreTimeoutRef.current)
+//             }
+//         }
+//     }, [loadMore, hasMore, isLoading])
+
+//     // Observe the loader element
+//     useEffect(() => {
+//         const currentLoaderRef = loaderRef.current
+//         const currentObserver = observerRef.current
+
+//         if (currentLoaderRef && currentObserver) {
+//             currentObserver.observe(currentLoaderRef)
+//         }
+
+//         return () => {
+//             if (currentLoaderRef && currentObserver) {
+//                 currentObserver.unobserve(currentLoaderRef)
+//             }
+//         }
+//     }, [loaderRef.current, observerRef.current])
+
+//     return {
+//         page,
+//         isLoading,
+//         setIsLoading,
+//         hasMore,
+//         setHasMore,
+//         items,
+//         setItems,
+//         loaderRef,
+//         resetPage: () => setPage(initialPage),
+//     }
+// }
